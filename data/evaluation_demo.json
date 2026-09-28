@@ -1,0 +1,70 @@
+[
+  {
+    "query": "青空商事でRAGを実装し評価した報告",
+    "relevant_files": [
+      "青空商事/RAG_実装報告.pdf"
+    ],
+    "split": "demo"
+  },
+  {
+    "query": "青空商事のRAG導入を検討している資料",
+    "relevant_files": [
+      "青空商事/RAG_導入検討.pptx"
+    ],
+    "split": "demo"
+  },
+  {
+    "query": "問い合わせ対応時間を短縮した結果",
+    "relevant_files": [
+      "青空商事/RAG_実装報告.pdf"
+    ],
+    "split": "demo"
+  },
+  {
+    "query": "青空商事の開発費と担当者",
+    "relevant_files": [
+      "青空商事/PJ費用.xlsx"
+    ],
+    "split": "demo"
+  },
+  {
+    "query": "YOLOで金属部品の欠陥検出を実装した研究",
+    "relevant_files": [
+      "研究/画像認識_評価.pptx"
+    ],
+    "split": "demo"
+  },
+  {
+    "query": "Whisperで工場の音声を文字起こしした資料",
+    "relevant_files": [
+      "白波工業/音声認識_導入.md"
+    ],
+    "split": "demo"
+  },
+  {
+    "query": "VPNのDNS障害を解決した案件",
+    "relevant_files": [
+      "青空商事/ネットワーク改修.txt"
+    ],
+    "split": "demo"
+  },
+  {
+    "query": "Gitのブランチを作るコマンド",
+    "relevant_files": [
+      "技術/Git_基本操作.pdf"
+    ],
+    "split": "demo"
+  },
+  {
+    "query": "有給休暇の申請手順",
+    "relevant_files": [
+      "総務/休暇手続き.md"
+    ],
+    "split": "demo"
+  },
+  {
+    "query": "火星探査機の燃料タンクの設計",
+    "relevant_files": [],
+    "split": "demo"
+  }
+]

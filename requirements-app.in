@@ -1,0 +1,10 @@
+# 完成版。学習用 requirements.txt はそのまま利用できます。
+pdfminer.six==20260107
+streamlit>=1.50,<2
+python-pptx>=1.0.2,<2
+openpyxl>=3.1.5,<4
+numpy>=2,<3
+SudachiPy>=0.6.10,<1
+SudachiDict-small
+requests>=2.32,<3
+

@@ -1,0 +1,4 @@
+# Python 3.12.14
+# Dependencies for the current PDF extraction and keyword-search lessons.
+# pathlib, sqlite3, argparse, and venv are included in Python.
+pdfminer.six==20260107

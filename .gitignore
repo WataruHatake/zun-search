@@ -1,0 +1,24 @@
+.venv/
+.rag/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.py[cod]
+.DS_Store
+tmp/
+output/
+outputs/
+dumps/
+.agents/
+.claude/
+.codex/
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+
+# Personal learning and development records
+LEARNING_PLAN.md
+DESIGN_CHANGES_2026-09-09.md
+IMPLEMENTATION_NOTES.md
+read_pdf_spire.py

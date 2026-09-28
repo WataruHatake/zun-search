@@ -1,0 +1,2 @@
+# requirements-app.txt に追加。Meilisearch本体は brew install meilisearch。
+faiss-cpu==1.15.0

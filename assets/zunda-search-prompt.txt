@@ -1,0 +1,11 @@
+Generated with the built-in image_gen tool for Zunda Search. Original edamame motif; not an official Zundamon illustration.
+
+Use case: logo-brand. Asset type: a single square app icon for a Japanese local document search app named Zunda Search. Primary request: ずんだもんをイメージした、かわいい枝豆のアプリアイコン。An original edamame-pod mascot motif, not a human portrait. One plump curved bright-green edamame pod holding three round pale-lime beans, with a tiny friendly face on the middle bean. Silhouette simple and bold, dark forest-green outline, fresh lime-green and cream palette. Clean polished flat illustration with very subtle soft shading, no realistic texture. Centered large icon filling about 85 percent of the square, clearly readable at favicon size. Actual transparent background. No lettering, no wordmark, no additional objects, no magnifying glass, no watermark. Render one finished production icon, not a sheet of variants.
+
+Edited with the built-in image_gen tool. Final image: zunda-search.png
+
+Face removal:
+Edit the referenced Zunda Search edamame app icon. Remove ONLY the eyes, mouth, and pink cheeks from the middle bean, restoring a smooth pale-lime green bean surface with shading and highlights consistent with the other beans. No face or facial features anywhere. Keep the pod, three beans, silhouette, orientation, colors, outlines, highlights, composition, and transparent background unchanged. Do not add text or objects.
+
+Transparency correction:
+Use case: background-extraction. Edit this faceless edamame icon. Remove the gray checkerboard background completely and output actual transparent pixels in an RGBA PNG. The checkerboard is unwanted image content: do NOT render any checkerboard, gray squares, white background, or black background. Preserve the green edamame pod and the three plain beans exactly, including their shape, outlines, colors, and highlights. Keep all three beans faceless: no eyes, mouth, or pink cheeks. Transparent cutout only, same centered square composition.
