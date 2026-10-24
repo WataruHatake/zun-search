@@ -1,11 +1,12 @@
 """候補検索 → 再順位付け → ファイル集約 → 出典付き回答。"""
 
 import json
-import re
 import time
 from collections import defaultdict
 from pathlib import Path
 
+from rag_app.citations import original_quote as original_quote
+from rag_app.citations import validate_citations
 from rag_app.documents import EXTENSIONS, fingerprint
 from rag_app.index import normalize, terms
 from rag_app.models import ModelError, dedicated_rerank
@@ -350,24 +351,6 @@ def search(index, query, ollama, config, mode="hybrid", extensions=None):
     }
 
 
-def original_quote(text: str, quote: str) -> str | None:
-    """モデルが数字の前後などに空白を足した場合も、原文の文字列を復元する。"""
-    if not isinstance(quote, str):
-        return None
-    compact_quote = "".join(char for char in quote if not char.isspace())
-    if len(compact_quote) < 4:
-        return None
-    if quote in text:
-        return quote
-    positions = [position for position, char in enumerate(text) if not char.isspace()]
-    compact_text = "".join(text[position] for position in positions)
-    start = compact_text.find(compact_quote)
-    if start < 0:
-        return None
-    # 空白以外の文字・数字・記号は完全一致。表示には生成文ではなく原文を使う。
-    return text[positions[start] : positions[start + len(compact_quote) - 1] + 1]
-
-
 def answer(index, file_id, question, ollama, config):
     question = question.strip()
     if not question or len(question) > 1000:
@@ -394,6 +377,11 @@ def answer(index, file_id, question, ollama, config):
             "answer": "検索で取得できた本文には、この質問の根拠が見つかりませんでした。",
             "citations": [],
             "warnings": warnings,
+            "retrieved": [],
+            "supported": False,
+            "status": "no_evidence",
+            "raw_response": None,
+            "validation": None,
         }
     evidence = [
         {"id": number, "location": row["location"], "text": row["text"]} for number, row in enumerate(rows, 1)
@@ -422,46 +410,35 @@ def answer(index, file_id, question, ollama, config):
         "画像のAI読み取り・AI推定を根拠にする場合は、その旨を回答にも明示し、推定を確定事項にしないでください。"
         "根拠不足ならsupported=falseにしてください。answer文字列の各主張の末尾には、引用したidを"
         "『…です[1]。』のように必ず入れてください。citationsにidを書くだけでは不十分です。"
+        "平文の短い文または箇条書きで書き、各文・各行の末尾に引用番号を付けてください。"
+        "見出し・表・単独の引用番号行は使わず、引用番号の後に別の主張を追加しないでください。"
         "出典番号は入力evidenceのidをそのまま使い、振り直したり、text内の数字を番号にしたりしないでください。"
         "answer内の番号とcitationsのidを一致させ、quoteはそのidのtextから一字一句そのまま抜き出してください。"
         "1つのquoteは連続した一部分にしてください。離れた箇所を連結せず、同じidの引用を分けてください。",
         json.dumps(payload, ensure_ascii=False),
         schema,
     )
-    by_id = {e["id"]: e for e in evidence}
-    citations = []
-    supplied = data.get("citations", [])
-    valid = isinstance(supplied, list) and bool(supplied)
-    for citation in supplied if isinstance(supplied, list) else []:
-        if not isinstance(citation, dict):
-            valid = False
-            continue
-        citation_id = citation.get("id")
-        original = by_id.get(citation_id) if type(citation_id) is int else None
-        quote = citation.get("quote")
-        recovered = original_quote(original["text"], quote) if original else None
-        quotes = [recovered]
-        if recovered is None and original and isinstance(quote, str) and "\n" in quote:
-            # 離れた行を連結した引用は、各行が原文と一致する場合だけ別々の引用として示す。
-            quotes = [original_quote(original["text"], line) for line in quote.splitlines() if line.strip()]
-        if not quotes or any(part is None for part in quotes):
-            valid = False
-            continue
-        citations.extend({**original, "quote": part} for part in quotes)
     generated = data.get("answer")
-    if isinstance(generated, str):
-        references = {int(number) for number in re.findall(r"\[(\d+)\]", generated)}
-        valid = valid and bool(references) and references <= {c["id"] for c in citations}
-    if (
-        data.get("supported") is not True
-        or not valid
-        or not isinstance(generated, str)
-        or not generated.strip()
-    ):
+    validation = validate_citations(generated, data.get("citations"), evidence)
+    if data.get("supported") is not True or not validation["valid"]:
         return {
             "answer": "取得した抜粋から、原文で確認できる十分な根拠を伴う回答を作れませんでした。質問を具体的にするか、下の本文を確認してください。",
             "citations": [],
             "warnings": warnings,
             "retrieved": evidence,
+            "supported": False,
+            "status": "abstained" if data.get("supported") is False else "validation_failed",
+            "raw_response": data,
+            "validation": validation,
         }
-    return {"answer": generated, "citations": citations, "warnings": warnings, "retrieved": evidence}
+    return {
+        "answer": generated,
+        "citations": validation["citations"],
+        "warnings": warnings,
+        "retrieved": evidence,
+        # supported は生成モデルの申告＋機械検査の通過であり、意味的な保証ではない。
+        "supported": True,
+        "status": "answered",
+        "raw_response": data,
+        "validation": validation,
+    }

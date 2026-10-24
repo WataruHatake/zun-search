@@ -76,6 +76,8 @@ uv pip install --python .venv/bin/python -r requirements-reranker.txt
 
 学習用スクリプト、`requirements.txt`、`SETUP.md` は履歴として残しています。
 
+NVIDIAの **Nemotron 3.5 Embed / Rerank（2026-10-20公開）** を含む、[検索モデルの棚卸し・仕様比較・実験手順](docs/embedding-model-inventory.md)を追加しました（2026-10-24公式資料確認）。現行Qwenとの日本語品質・Mac速度の比較は未実測です。NVIDIAモデルは前処理・実行環境が異なるため、モデル名だけの差し替えには対応していません。
+
 ## CLIと検証
 
 CLIも起動済みのMeilisearchを使い、画面と同じ設定・資料を参照します。
@@ -99,6 +101,47 @@ RAG_TEST_MEILI=1 .venv/bin/pytest -q
 ```
 
 Meilisearchの結合テストは一時資料・一時索引を使い、終了時に削除します。`RAG_TEST_MEILI=1` を付けない場合は結合テストをスキップします。
+
+## 回答の根拠評価
+
+検索用の `data/evaluation_demo.json` と Recall@K / MRR / NDCG@K はそのままです。回答評価は別のデータ・CLI・JSONレポートで行います。
+
+`answer()` は引用IDと原文一致に加え、各文・各行の末尾に引用があるか、引用番号だけの行や未使用の引用がないかを検査します。不整合があれば回答を抑止します。引用が正しくても、その引用が主張を裏付けるかは自動保証しません。意味的な正確性・根拠支持・引用の適切さ・回答不能への対応は、正解と原文を使った人手レビューとして別集計します。
+
+次は **手書きのモック応答11件** の検証で、LLMも検索サーバーも起動しません。未レビューの意味指標は `null` です。
+
+```sh
+python -m rag_app.answer_eval score \
+  --dataset data/answer_evaluation_demo.json \
+  --predictions data/answer_predictions_mock.json \
+  --output output/answer_mock_report.json
+
+python -m rag_app.answer_eval review-template \
+  --dataset data/answer_evaluation_demo.json \
+  --predictions data/answer_predictions_mock.json \
+  --output output/answer_reviews.json
+# 原文・正解と回答を照合し、レビュー票を記入してから実行
+python -m rag_app.answer_eval score \
+  --dataset data/answer_evaluation_demo.json \
+  --predictions data/answer_predictions_mock.json \
+  --reviews output/answer_reviews.json \
+  --output output/answer_reviewed_report.json
+```
+
+実モデルで回答を収集するには、Ollama・Meilisearchを起動し、評価用資料の索引を準備します。
+
+```sh
+.venv/bin/python -m rag_app index --folder data/answer_evaluation_sources --no-images
+.venv/bin/python -m rag_app.answer_eval run \
+  --folder data/answer_evaluation_sources \
+  --dataset data/answer_evaluation_demo.json \
+  --output output/answer_live_predictions.json
+# 上のscore/review-templateで --predictions をこのliveファイルに替える
+```
+
+`run` は実際の `service.answer()` を通し、生の生成回答・提示された抜粋・検証後の表示回答・エラーを記録します。生成を止めたケースを適切な回答拒否として自動加点しません。データセットと回答のハッシュで古いレビューの流用を防ぎます。11件は回帰検証用であり、モデルの優劣を結論するには独立した日本語の評価資料が必要です。
+
+[データ形式・判定基準・検査の限界](docs/answer-evaluation.md)を参照してください。今回の変更では実LLMによる品質計測は未実施です。
 
 実装は `app_meili_faiss.py` と `rag_app/` にあります。`index.py` は本文の保存・抽出・差分更新・日本語トークン化の共通基盤とテスト用の検索基準、`meili_faiss.py` は現在の検索エンジンです。SQLiteには原文・出典・ベクトルを保存します。
 
