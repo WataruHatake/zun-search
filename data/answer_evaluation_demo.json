@@ -1,0 +1,424 @@
+{
+  "schema_version": 1,
+  "kind": "answer_grounding",
+  "provenance": {
+    "type": "synthetic",
+    "description": "2026-10-24作成の架空資料と手作り正解。実ユーザー資料・LLM実測ではない。導入前に独立した人手で正解データを確認する。"
+  },
+  "cases": [
+    {
+      "id": "supported",
+      "question": "RAGの費用はいくら？",
+      "source": "project.md",
+      "answerable": true,
+      "reference_answer": "費用は120万円です。",
+      "required_claims": [
+        {
+          "id": "cost",
+          "text": "費用は120万円。",
+          "evidence": [
+            {
+              "source_id": 1,
+              "quote": "費用は120万円。"
+            }
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        "削減率は50%と確定している。",
+        "来年度の予算は120万円と確定している。",
+        "費用は1200万円。"
+      ],
+      "evidence": [
+        {
+          "id": 1,
+          "location": "project.md:1",
+          "text": "青空商事でRAGを実装した。担当は田中。費用は120万円。削減効果は検証中で、削減率は未確定。"
+        },
+        {
+          "id": 2,
+          "location": "project.md:2",
+          "text": "有給休暇は前営業日までに申請する。"
+        }
+      ],
+      "source_sha256": "2bd123793b0a73fceaf414f4eed4044ec6d24616e5cd427f7ba6aef039e37330"
+    },
+    {
+      "id": "uncited_extra_claim",
+      "question": "RAGの費用と削減効果は？",
+      "source": "project.md",
+      "answerable": true,
+      "reference_answer": "費用は120万円で、削減効果は検証中です。",
+      "required_claims": [
+        {
+          "id": "cost",
+          "text": "費用は120万円。",
+          "evidence": [
+            {
+              "source_id": 1,
+              "quote": "費用は120万円。"
+            }
+          ]
+        },
+        {
+          "id": "effect",
+          "text": "削減率は未確定。",
+          "evidence": [
+            {
+              "source_id": 1,
+              "quote": "削減効果は検証中で、削減率は未確定。"
+            }
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        "削減率は50%と確定している。",
+        "来年度の予算は120万円と確定している。",
+        "費用は1200万円。"
+      ],
+      "evidence": [
+        {
+          "id": 1,
+          "location": "project.md:1",
+          "text": "青空商事でRAGを実装した。担当は田中。費用は120万円。削減効果は検証中で、削減率は未確定。"
+        },
+        {
+          "id": 2,
+          "location": "project.md:2",
+          "text": "有給休暇は前営業日までに申請する。"
+        }
+      ],
+      "source_sha256": "2bd123793b0a73fceaf414f4eed4044ec6d24616e5cd427f7ba6aef039e37330"
+    },
+    {
+      "id": "missing_middle_citation",
+      "question": "RAGの担当と費用は？",
+      "source": "project.md",
+      "answerable": true,
+      "reference_answer": "担当は田中、費用は120万円です。",
+      "required_claims": [
+        {
+          "id": "owner",
+          "text": "担当は田中。",
+          "evidence": [
+            {
+              "source_id": 1,
+              "quote": "担当は田中。"
+            }
+          ]
+        },
+        {
+          "id": "cost",
+          "text": "費用は120万円。",
+          "evidence": [
+            {
+              "source_id": 1,
+              "quote": "費用は120万円。"
+            }
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        "削減率は50%と確定している。",
+        "来年度の予算は120万円と確定している。",
+        "費用は1200万円。"
+      ],
+      "evidence": [
+        {
+          "id": 1,
+          "location": "project.md:1",
+          "text": "青空商事でRAGを実装した。担当は田中。費用は120万円。削減効果は検証中で、削減率は未確定。"
+        },
+        {
+          "id": 2,
+          "location": "project.md:2",
+          "text": "有給休暇は前営業日までに申請する。"
+        }
+      ],
+      "source_sha256": "2bd123793b0a73fceaf414f4eed4044ec6d24616e5cd427f7ba6aef039e37330"
+    },
+    {
+      "id": "cited_unsupported_claim",
+      "question": "RAGの費用と削減効果は？",
+      "source": "project.md",
+      "answerable": true,
+      "reference_answer": "費用は120万円で、削減効果は検証中です。",
+      "required_claims": [
+        {
+          "id": "cost",
+          "text": "費用は120万円。",
+          "evidence": [
+            {
+              "source_id": 1,
+              "quote": "費用は120万円。"
+            }
+          ]
+        },
+        {
+          "id": "effect",
+          "text": "削減率は未確定。",
+          "evidence": [
+            {
+              "source_id": 1,
+              "quote": "削減効果は検証中で、削減率は未確定。"
+            }
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        "削減率は50%と確定している。",
+        "来年度の予算は120万円と確定している。",
+        "費用は1200万円。"
+      ],
+      "evidence": [
+        {
+          "id": 1,
+          "location": "project.md:1",
+          "text": "青空商事でRAGを実装した。担当は田中。費用は120万円。削減効果は検証中で、削減率は未確定。"
+        },
+        {
+          "id": 2,
+          "location": "project.md:2",
+          "text": "有給休暇は前営業日までに申請する。"
+        }
+      ],
+      "source_sha256": "2bd123793b0a73fceaf414f4eed4044ec6d24616e5cd427f7ba6aef039e37330"
+    },
+    {
+      "id": "contradicted_number",
+      "question": "RAGの費用はいくら？",
+      "source": "project.md",
+      "answerable": true,
+      "reference_answer": "費用は120万円です。",
+      "required_claims": [
+        {
+          "id": "cost",
+          "text": "費用は120万円。",
+          "evidence": [
+            {
+              "source_id": 1,
+              "quote": "費用は120万円。"
+            }
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        "削減率は50%と確定している。",
+        "来年度の予算は120万円と確定している。",
+        "費用は1200万円。"
+      ],
+      "evidence": [
+        {
+          "id": 1,
+          "location": "project.md:1",
+          "text": "青空商事でRAGを実装した。担当は田中。費用は120万円。削減効果は検証中で、削減率は未確定。"
+        },
+        {
+          "id": 2,
+          "location": "project.md:2",
+          "text": "有給休暇は前営業日までに申請する。"
+        }
+      ],
+      "source_sha256": "2bd123793b0a73fceaf414f4eed4044ec6d24616e5cd427f7ba6aef039e37330"
+    },
+    {
+      "id": "unanswerable_abstention",
+      "question": "RAGの来年度の予算はいくら？",
+      "source": "project.md",
+      "answerable": false,
+      "reference_answer": "来年度の予算は資料から確認できません。",
+      "required_claims": [],
+      "forbidden_claims": [
+        "削減率は50%と確定している。",
+        "来年度の予算は120万円と確定している。",
+        "費用は1200万円。"
+      ],
+      "evidence": [
+        {
+          "id": 1,
+          "location": "project.md:1",
+          "text": "青空商事でRAGを実装した。担当は田中。費用は120万円。削減効果は検証中で、削減率は未確定。"
+        },
+        {
+          "id": 2,
+          "location": "project.md:2",
+          "text": "有給休暇は前営業日までに申請する。"
+        }
+      ],
+      "source_sha256": "2bd123793b0a73fceaf414f4eed4044ec6d24616e5cd427f7ba6aef039e37330"
+    },
+    {
+      "id": "unanswerable_hallucination",
+      "question": "RAGの来年度の予算はいくら？",
+      "source": "project.md",
+      "answerable": false,
+      "reference_answer": "来年度の予算は資料から確認できません。",
+      "required_claims": [],
+      "forbidden_claims": [
+        "削減率は50%と確定している。",
+        "来年度の予算は120万円と確定している。",
+        "費用は1200万円。"
+      ],
+      "evidence": [
+        {
+          "id": 1,
+          "location": "project.md:1",
+          "text": "青空商事でRAGを実装した。担当は田中。費用は120万円。削減効果は検証中で、削減率は未確定。"
+        },
+        {
+          "id": 2,
+          "location": "project.md:2",
+          "text": "有給休暇は前営業日までに申請する。"
+        }
+      ],
+      "source_sha256": "2bd123793b0a73fceaf414f4eed4044ec6d24616e5cd427f7ba6aef039e37330"
+    },
+    {
+      "id": "unnecessary_abstention",
+      "question": "RAGの費用はいくら？",
+      "source": "project.md",
+      "answerable": true,
+      "reference_answer": "費用は120万円です。",
+      "required_claims": [
+        {
+          "id": "cost",
+          "text": "費用は120万円。",
+          "evidence": [
+            {
+              "source_id": 1,
+              "quote": "費用は120万円。"
+            }
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        "削減率は50%と確定している。",
+        "来年度の予算は120万円と確定している。",
+        "費用は1200万円。"
+      ],
+      "evidence": [
+        {
+          "id": 1,
+          "location": "project.md:1",
+          "text": "青空商事でRAGを実装した。担当は田中。費用は120万円。削減効果は検証中で、削減率は未確定。"
+        },
+        {
+          "id": 2,
+          "location": "project.md:2",
+          "text": "有給休暇は前営業日までに申請する。"
+        }
+      ],
+      "source_sha256": "2bd123793b0a73fceaf414f4eed4044ec6d24616e5cd427f7ba6aef039e37330"
+    },
+    {
+      "id": "incomplete_answer",
+      "question": "RAGの担当と費用は？",
+      "source": "project.md",
+      "answerable": true,
+      "reference_answer": "担当は田中、費用は120万円です。",
+      "required_claims": [
+        {
+          "id": "owner",
+          "text": "担当は田中。",
+          "evidence": [
+            {
+              "source_id": 1,
+              "quote": "担当は田中。"
+            }
+          ]
+        },
+        {
+          "id": "cost",
+          "text": "費用は120万円。",
+          "evidence": [
+            {
+              "source_id": 1,
+              "quote": "費用は120万円。"
+            }
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        "削減率は50%と確定している。",
+        "来年度の予算は120万円と確定している。",
+        "費用は1200万円。"
+      ],
+      "evidence": [
+        {
+          "id": 1,
+          "location": "project.md:1",
+          "text": "青空商事でRAGを実装した。担当は田中。費用は120万円。削減効果は検証中で、削減率は未確定。"
+        },
+        {
+          "id": 2,
+          "location": "project.md:2",
+          "text": "有給休暇は前営業日までに申請する。"
+        }
+      ],
+      "source_sha256": "2bd123793b0a73fceaf414f4eed4044ec6d24616e5cd427f7ba6aef039e37330"
+    },
+    {
+      "id": "irrelevant_citation",
+      "question": "RAGの費用はいくら？",
+      "source": "project.md",
+      "answerable": true,
+      "reference_answer": "費用は120万円です。",
+      "required_claims": [
+        {
+          "id": "cost",
+          "text": "費用は120万円。",
+          "evidence": [
+            {
+              "source_id": 1,
+              "quote": "費用は120万円。"
+            }
+          ]
+        }
+      ],
+      "forbidden_claims": [
+        "削減率は50%と確定している。",
+        "来年度の予算は120万円と確定している。",
+        "費用は1200万円。"
+      ],
+      "evidence": [
+        {
+          "id": 1,
+          "location": "project.md:1",
+          "text": "青空商事でRAGを実装した。担当は田中。費用は120万円。削減効果は検証中で、削減率は未確定。"
+        },
+        {
+          "id": 2,
+          "location": "project.md:2",
+          "text": "有給休暇は前営業日までに申請する。"
+        }
+      ],
+      "source_sha256": "2bd123793b0a73fceaf414f4eed4044ec6d24616e5cd427f7ba6aef039e37330"
+    },
+    {
+      "id": "false_abstention_flag",
+      "question": "RAGの来年度の予算はいくら？",
+      "source": "project.md",
+      "answerable": false,
+      "reference_answer": "来年度の予算は資料から確認できません。",
+      "required_claims": [],
+      "forbidden_claims": [
+        "削減率は50%と確定している。",
+        "来年度の予算は120万円と確定している。",
+        "費用は1200万円。"
+      ],
+      "evidence": [
+        {
+          "id": 1,
+          "location": "project.md:1",
+          "text": "青空商事でRAGを実装した。担当は田中。費用は120万円。削減効果は検証中で、削減率は未確定。"
+        },
+        {
+          "id": 2,
+          "location": "project.md:2",
+          "text": "有給休暇は前営業日までに申請する。"
+        }
+      ],
+      "source_sha256": "2bd123793b0a73fceaf414f4eed4044ec6d24616e5cd427f7ba6aef039e37330"
+    }
+  ]
+}

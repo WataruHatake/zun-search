@@ -1,0 +1,290 @@
+{
+  "schema_version": 1,
+  "kind": "answer_predictions",
+  "run_type": "mock",
+  "metadata": {
+    "model": null,
+    "created_on": "2026-10-24",
+    "quality_measured": false,
+    "description": "回帰検証用の手書き応答。実際のLLMは呼び出していない。"
+  },
+  "records": [
+    {
+      "case_id": "supported",
+      "response": {
+        "supported": true,
+        "answer": "費用は120万円です[1]。",
+        "citations": [
+          {
+            "id": 1,
+            "quote": "費用は120万円。"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "id": 1,
+          "location": "project.md:1",
+          "text": "青空商事でRAGを実装した。担当は田中。費用は120万円。削減効果は検証中で、削減率は未確定。"
+        },
+        {
+          "id": 2,
+          "location": "project.md:2",
+          "text": "有給休暇は前営業日までに申請する。"
+        }
+      ],
+      "generation_attempted": true
+    },
+    {
+      "case_id": "uncited_extra_claim",
+      "response": {
+        "supported": true,
+        "answer": "費用は120万円です[1]。コストは50%削減されました。",
+        "citations": [
+          {
+            "id": 1,
+            "quote": "費用は120万円。"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "id": 1,
+          "location": "project.md:1",
+          "text": "青空商事でRAGを実装した。担当は田中。費用は120万円。削減効果は検証中で、削減率は未確定。"
+        },
+        {
+          "id": 2,
+          "location": "project.md:2",
+          "text": "有給休暇は前営業日までに申請する。"
+        }
+      ],
+      "generation_attempted": true
+    },
+    {
+      "case_id": "missing_middle_citation",
+      "response": {
+        "supported": true,
+        "answer": "担当は田中です[1]。費用は120万円です。RAGを実装しました[1]。",
+        "citations": [
+          {
+            "id": 1,
+            "quote": "青空商事でRAGを実装した。担当は田中。費用は120万円。"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "id": 1,
+          "location": "project.md:1",
+          "text": "青空商事でRAGを実装した。担当は田中。費用は120万円。削減効果は検証中で、削減率は未確定。"
+        },
+        {
+          "id": 2,
+          "location": "project.md:2",
+          "text": "有給休暇は前営業日までに申請する。"
+        }
+      ],
+      "generation_attempted": true
+    },
+    {
+      "case_id": "cited_unsupported_claim",
+      "response": {
+        "supported": true,
+        "answer": "費用は120万円で、コストは50%削減されました[1]。",
+        "citations": [
+          {
+            "id": 1,
+            "quote": "費用は120万円。"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "id": 1,
+          "location": "project.md:1",
+          "text": "青空商事でRAGを実装した。担当は田中。費用は120万円。削減効果は検証中で、削減率は未確定。"
+        },
+        {
+          "id": 2,
+          "location": "project.md:2",
+          "text": "有給休暇は前営業日までに申請する。"
+        }
+      ],
+      "generation_attempted": true
+    },
+    {
+      "case_id": "contradicted_number",
+      "response": {
+        "supported": true,
+        "answer": "費用は1200万円です[1]。",
+        "citations": [
+          {
+            "id": 1,
+            "quote": "費用は120万円。"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "id": 1,
+          "location": "project.md:1",
+          "text": "青空商事でRAGを実装した。担当は田中。費用は120万円。削減効果は検証中で、削減率は未確定。"
+        },
+        {
+          "id": 2,
+          "location": "project.md:2",
+          "text": "有給休暇は前営業日までに申請する。"
+        }
+      ],
+      "generation_attempted": true
+    },
+    {
+      "case_id": "unanswerable_abstention",
+      "response": {
+        "supported": false,
+        "answer": "来年度の予算は資料から確認できません。",
+        "citations": []
+      },
+      "evidence": [
+        {
+          "id": 1,
+          "location": "project.md:1",
+          "text": "青空商事でRAGを実装した。担当は田中。費用は120万円。削減効果は検証中で、削減率は未確定。"
+        },
+        {
+          "id": 2,
+          "location": "project.md:2",
+          "text": "有給休暇は前営業日までに申請する。"
+        }
+      ],
+      "generation_attempted": true
+    },
+    {
+      "case_id": "unanswerable_hallucination",
+      "response": {
+        "supported": true,
+        "answer": "来年度の予算は120万円です[1]。",
+        "citations": [
+          {
+            "id": 1,
+            "quote": "費用は120万円。"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "id": 1,
+          "location": "project.md:1",
+          "text": "青空商事でRAGを実装した。担当は田中。費用は120万円。削減効果は検証中で、削減率は未確定。"
+        },
+        {
+          "id": 2,
+          "location": "project.md:2",
+          "text": "有給休暇は前営業日までに申請する。"
+        }
+      ],
+      "generation_attempted": true
+    },
+    {
+      "case_id": "unnecessary_abstention",
+      "response": {
+        "supported": false,
+        "answer": "資料から確認できません。",
+        "citations": []
+      },
+      "evidence": [
+        {
+          "id": 1,
+          "location": "project.md:1",
+          "text": "青空商事でRAGを実装した。担当は田中。費用は120万円。削減効果は検証中で、削減率は未確定。"
+        },
+        {
+          "id": 2,
+          "location": "project.md:2",
+          "text": "有給休暇は前営業日までに申請する。"
+        }
+      ],
+      "generation_attempted": true
+    },
+    {
+      "case_id": "incomplete_answer",
+      "response": {
+        "supported": true,
+        "answer": "担当は田中です[1]。",
+        "citations": [
+          {
+            "id": 1,
+            "quote": "担当は田中。"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "id": 1,
+          "location": "project.md:1",
+          "text": "青空商事でRAGを実装した。担当は田中。費用は120万円。削減効果は検証中で、削減率は未確定。"
+        },
+        {
+          "id": 2,
+          "location": "project.md:2",
+          "text": "有給休暇は前営業日までに申請する。"
+        }
+      ],
+      "generation_attempted": true
+    },
+    {
+      "case_id": "irrelevant_citation",
+      "response": {
+        "supported": true,
+        "answer": "費用は120万円です[2]。",
+        "citations": [
+          {
+            "id": 2,
+            "quote": "有給休暇は前営業日までに申請する。"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "id": 1,
+          "location": "project.md:1",
+          "text": "青空商事でRAGを実装した。担当は田中。費用は120万円。削減効果は検証中で、削減率は未確定。"
+        },
+        {
+          "id": 2,
+          "location": "project.md:2",
+          "text": "有給休暇は前営業日までに申請する。"
+        }
+      ],
+      "generation_attempted": true
+    },
+    {
+      "case_id": "false_abstention_flag",
+      "response": {
+        "supported": false,
+        "answer": "来年度の予算は120万円です[1]。",
+        "citations": [
+          {
+            "id": 1,
+            "quote": "費用は120万円。"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "id": 1,
+          "location": "project.md:1",
+          "text": "青空商事でRAGを実装した。担当は田中。費用は120万円。削減効果は検証中で、削減率は未確定。"
+        },
+        {
+          "id": 2,
+          "location": "project.md:2",
+          "text": "有給休暇は前営業日までに申請する。"
+        }
+      ],
+      "generation_attempted": true
+    }
+  ],
+  "dataset_sha256": "ed11cff577bd7b86adc6b1b7ff30b22ff0c07ad0d29ed87b4e608748678ebe98"
+}

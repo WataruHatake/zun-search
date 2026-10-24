@@ -1,5 +1,10 @@
+from datetime import datetime
+from io import BytesIO
 from pathlib import Path
+from xml.etree import ElementTree as ET
+from zipfile import ZipFile
 
+import pytest
 from openpyxl import Workbook
 from pptx import Presentation
 from pptx.util import Inches
@@ -89,12 +94,61 @@ def test_generated_demo_covers_document_formats():
         assert result.passages, path.name
 
 
-def test_excel_title_rows_cached_values_and_cells():
-    path = (
-        Path(__file__).resolve().parent.parent
-        / "outputs/01a08545-50cb-7ce2-815d-fcc94b033ea9/Excel検索検証.xlsx"
-    )
-    result = extract(path)
+@pytest.fixture
+def excel_search_fixture(tmp_path):
+    """個人の outputs/ に依存せず、数式キャッシュを含む同じ検証条件を生成する。"""
+    path = tmp_path / "Excel検索検証.xlsx"
+    workbook = Workbook()
+    cost = workbook.active
+    cost.title = "費用"
+    cost["A1"] = "青葉工業 音声認識導入費用"
+    for number, row in enumerate(
+        [
+            ["項目", "内訳", "金額（円）", "担当"],
+            ["開発", "導入", 1800000, "山田"],
+            ["検証", "調整", 240000, "佐藤"],
+            ["合計", "総費用", "=SUM(C5:C6)", "確認済み"],
+        ],
+        4,
+    ):
+        for column, value in enumerate(row, 1):
+            cost.cell(number, column, value)
+    schedule = workbook.create_sheet("日程")
+    schedule["A1"] = "導入予定"
+    for number, row in enumerate(
+        [
+            ["工程", "予定日", "完了率", "担当"],
+            ["実装", datetime(2026, 9, 25), 0.875, "山田"],
+        ],
+        4,
+    ):
+        for column, value in enumerate(row, 1):
+            schedule.cell(number, column, value)
+    schedule["B5"].number_format = "yyyy-mm-dd"
+    schedule["C5"].number_format = "0.0%"
+    inventory = workbook.create_sheet("在庫")
+    inventory.append(["品名", "製品番号", "数量", "補足"])
+    inventory.append(["設備", "007", 0, "未入荷"])
+    workbook.save(path)
+    workbook.close()
+
+    # openpyxlは数式を再計算しない。保存済み計算結果をXMLに設定し、
+    # 数式を残したまま data_only=True で2040000を読み取れる試験データにする。
+    namespace = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+    with ZipFile(BytesIO(path.read_bytes())) as original, ZipFile(path, "w") as output:
+        for entry in original.infolist():
+            data = original.read(entry.filename)
+            if entry.filename == "xl/worksheets/sheet1.xml":
+                root = ET.fromstring(data)
+                cell = root.find(f".//{{{namespace}}}c[@r='C7']")
+                cell.find(f"{{{namespace}}}v").text = "2040000"
+                data = ET.tostring(root, encoding="utf-8", xml_declaration=True)
+            output.writestr(entry, data)
+    return path
+
+
+def test_excel_title_rows_cached_values_and_cells(excel_search_fixture):
+    result = extract(excel_search_fixture)
     rows = {row.location: row.text for row in result.passages}
     assert not result.warnings
     assert "A1=青葉工業 音声認識導入費用" in rows["費用!A5:D5"]
@@ -108,19 +162,15 @@ def test_excel_title_rows_cached_values_and_cells():
     assert "B2=007 | C2=0" in rows["在庫!A2:D2"]
 
 
-def test_excel_extractor_update_preserves_other_files(tmp_path):
+def test_excel_extractor_update_preserves_other_files(tmp_path, excel_search_fixture):
     import shutil
     from unittest.mock import patch
 
     from rag_app.index import Index
 
-    source = (
-        Path(__file__).resolve().parent.parent
-        / "outputs/01a08545-50cb-7ce2-815d-fcc94b033ea9/Excel検索検証.xlsx"
-    )
     folder = tmp_path / "docs"
     folder.mkdir()
-    shutil.copyfile(source, folder / "検証.xlsx")
+    shutil.copyfile(excel_search_fixture, folder / "検証.xlsx")
     (folder / "既存.txt").write_text("変更のない資料です。")
     with Index(tmp_path / "index.sqlite3") as index:
         index.update(folder)
